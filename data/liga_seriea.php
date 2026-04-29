@@ -1,0 +1,25 @@
+<?php
+function getSerieA() {
+    return [
+        ['nome' => 'Inter de Milão', 'sigla' => 'INT', 'cidade' => 'Milão', 'pais' => 'Itália', 'rep' => 96, 'orca' => 100000000],
+        ['nome' => 'AC Milan', 'sigla' => 'MIL', 'cidade' => 'Milão', 'pais' => 'Itália', 'rep' => 93, 'orca' => 80000000],
+        ['nome' => 'Juventus', 'sigla' => 'JUV', 'cidade' => 'Turim', 'pais' => 'Itália', 'rep' => 93, 'orca' => 90000000],
+        ['nome' => 'SSC Napoli', 'sigla' => 'NAP', 'cidade' => 'Nápoles', 'pais' => 'Itália', 'rep' => 91, 'orca' => 70000000],
+        ['nome' => 'Atalanta', 'sigla' => 'ATA', 'cidade' => 'Bérgamo', 'pais' => 'Itália', 'rep' => 90, 'orca' => 60000000],
+        ['nome' => 'AS Roma', 'sigla' => 'ROM', 'cidade' => 'Roma', 'pais' => 'Itália', 'rep' => 89, 'orca' => 60000000],
+        ['nome' => 'SS Lazio', 'sigla' => 'LAZ', 'cidade' => 'Roma', 'pais' => 'Itália', 'rep' => 88, 'orca' => 50000000],
+        ['nome' => 'Fiorentina', 'sigla' => 'FIO', 'cidade' => 'Florença', 'pais' => 'Itália', 'rep' => 87, 'orca' => 45000000],
+        ['nome' => 'Bologna FC', 'sigla' => 'BOL', 'cidade' => 'Bolonha', 'pais' => 'Itália', 'rep' => 86, 'orca' => 40000000],
+        ['nome' => 'Torino FC', 'sigla' => 'TOR', 'cidade' => 'Turim', 'pais' => 'Itália', 'rep' => 84, 'orca' => 30000000],
+        ['nome' => 'Monza', 'sigla' => 'MON', 'cidade' => 'Monza', 'pais' => 'Itália', 'rep' => 82, 'orca' => 25000000],
+        ['nome' => 'Genoa CFC', 'sigla' => 'GEN', 'cidade' => 'Gênova', 'pais' => 'Itália', 'rep' => 82, 'orca' => 25000000],
+        ['nome' => 'Udinese', 'sigla' => 'UDI', 'cidade' => 'Udine', 'pais' => 'Itália', 'rep' => 81, 'orca' => 20000000],
+        ['nome' => 'Cagliari Calcio', 'sigla' => 'CAG', 'cidade' => 'Cagliari', 'pais' => 'Itália', 'rep' => 80, 'orca' => 15000000],
+        ['nome' => 'Hellas Verona', 'sigla' => 'VER', 'cidade' => 'Verona', 'pais' => 'Itália', 'rep' => 79, 'orca' => 15000000],
+        ['nome' => 'Lecce', 'sigla' => 'LEC', 'cidade' => 'Lecce', 'pais' => 'Itália', 'rep' => 79, 'orca' => 15000000],
+        ['nome' => 'Empoli FC', 'sigla' => 'EMP', 'cidade' => 'Empoli', 'pais' => 'Itália', 'rep' => 78, 'orca' => 12000000],
+        ['nome' => 'Parma Calcio', 'sigla' => 'PAR', 'cidade' => 'Parma', 'pais' => 'Itália', 'rep' => 80, 'orca' => 25000000],
+        ['nome' => 'Como 1907', 'sigla' => 'COM', 'cidade' => 'Como', 'pais' => 'Itália', 'rep' => 78, 'orca' => 30000000],
+        ['nome' => 'Venezia FC', 'sigla' => 'VEN', 'cidade' => 'Veneza', 'pais' => 'Itália', 'rep' => 77, 'orca' => 15000000],
+    ];
+}

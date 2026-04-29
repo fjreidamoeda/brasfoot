@@ -1,0 +1,18 @@
+# Brasfoot 2026 - .htaccess
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /brasfoot2026/
+    
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+Options -Indexes
+
+<IfModule mod_headers.c>
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-Content-Type-Options "nosniff"
+</IfModule>
+
+AddDefaultCharset UTF-8
