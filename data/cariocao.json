@@ -1,0 +1,98 @@
+[
+    {
+        "nome": "Flamengo",
+        "sigla": "FLA",
+        "cidade": "Rio de Janeiro",
+        "pais": "Brasil",
+        "rep": 95,
+        "orca": 50000000
+    },
+    {
+        "nome": "Fluminense",
+        "sigla": "FLU",
+        "cidade": "Rio de Janeiro",
+        "pais": "Brasil",
+        "rep": 87,
+        "orca": 25000000
+    },
+    {
+        "nome": "Botafogo",
+        "sigla": "BOT",
+        "cidade": "Rio de Janeiro",
+        "pais": "Brasil",
+        "rep": 91,
+        "orca": 40000000
+    },
+    {
+        "nome": "Vasco da Gama",
+        "sigla": "VAS",
+        "cidade": "Rio de Janeiro",
+        "pais": "Brasil",
+        "rep": 84,
+        "orca": 20000000
+    },
+    {
+        "nome": "Nova Iguaçu",
+        "sigla": "NIG",
+        "cidade": "Nova Iguaçu",
+        "pais": "Brasil",
+        "rep": 70,
+        "orca": 1500000
+    },
+    {
+        "nome": "Portuguesa-RJ",
+        "sigla": "PRJ",
+        "cidade": "Rio de Janeiro",
+        "pais": "Brasil",
+        "rep": 68,
+        "orca": 1200000
+    },
+    {
+        "nome": "Boavista",
+        "sigla": "BOA",
+        "cidade": "Saquarema",
+        "pais": "Brasil",
+        "rep": 67,
+        "orca": 1000000
+    },
+    {
+        "nome": "Madureira",
+        "sigla": "MAD",
+        "cidade": "Rio de Janeiro",
+        "pais": "Brasil",
+        "rep": 66,
+        "orca": 800000
+    },
+    {
+        "nome": "Volta Redonda",
+        "sigla": "VRE",
+        "cidade": "Volta Redonda",
+        "pais": "Brasil",
+        "rep": 70,
+        "orca": 1200000
+    },
+    {
+        "nome": "Bangu",
+        "sigla": "BAN",
+        "cidade": "Rio de Janeiro",
+        "pais": "Brasil",
+        "rep": 65,
+        "orca": 700000
+    },
+    {
+        "nome": "Sampaio Corrêa-RJ",
+        "sigla": "SCR",
+        "cidade": "Saquarema",
+        "pais": "Brasil",
+        "rep": 64,
+        "orca": 500000
+    },
+    {
+        "nome": "Audax-RJ",
+        "sigla": "AUD",
+        "cidade": "Angra dos Reis",
+        "pais": "Brasil",
+        "rep": 63,
+        "orca": 500000
+    }
+]

@@ -1,0 +1,82 @@
+[
+    {
+        "nome": "Manchester United",
+        "sigla": "MUN",
+        "cidade": "Manchester",
+        "pais": "Inglaterra",
+        "rep": 91,
+        "orca": 80000000
+    },
+    {
+        "nome": "Tottenham Hotspur",
+        "sigla": "TOT",
+        "cidade": "Londres",
+        "pais": "Inglaterra",
+        "rep": 90,
+        "orca": 70000000
+    },
+    {
+        "nome": "AS Roma",
+        "sigla": "ROM",
+        "cidade": "Roma",
+        "pais": "Itália",
+        "rep": 89,
+        "orca": 60000000
+    },
+    {
+        "nome": "FC Porto",
+        "sigla": "POR",
+        "cidade": "Porto",
+        "pais": "Portugal",
+        "rep": 88,
+        "orca": 45000000
+    },
+    {
+        "nome": "Lazio",
+        "sigla": "LAZ",
+        "cidade": "Roma",
+        "pais": "Itália",
+        "rep": 88,
+        "orca": 50000000
+    },
+    {
+        "nome": "Ajax",
+        "sigla": "AJA",
+        "cidade": "Amsterdã",
+        "pais": "Holanda",
+        "rep": 87,
+        "orca": 40000000
+    },
+    {
+        "nome": "Eintracht Frankfurt",
+        "sigla": "FRA",
+        "cidade": "Frankfurt",
+        "pais": "Alemanha",
+        "rep": 87,
+        "orca": 55000000
+    },
+    {
+        "nome": "Real Sociedad",
+        "sigla": "RSO",
+        "cidade": "San Sebastián",
+        "pais": "Espanha",
+        "rep": 87,
+        "orca": 35000000
+    },
+    {
+        "nome": "Athletic Club",
+        "sigla": "ATH",
+        "cidade": "Bilbao",
+        "pais": "Espanha",
+        "rep": 87,
+        "orca": 35000000
+    },
+    {
+        "nome": "Galatasaray",
+        "sigla": "GAL",
+        "cidade": "Istambul",
+        "pais": "Turquia",
+        "rep": 86,
+        "orca": 35000000
+    }
+]

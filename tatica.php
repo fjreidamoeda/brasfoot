@@ -1,160 +1,145 @@
 <?php
-require_once 'classes/Tatica.php';
-require_once 'classes/Time.php';
-require_once 'classes/Save.php';
+require_once 'autoload.php';
+session_start();
 
-$save = new Save();
-$save_ativo = $save->buscarAtivo();
-$id_save = $save_ativo['id'] ?? 1;
+if (!isset($_SESSION['user_id'])) { header("Location: login.php"); exit; }
 
-$taticaModel = new Tatica();
-$timeModel = new Time();
+$db = Database::getInstance()->getConnection();
+$user_id = $_SESSION['user_id'];
 
-$times = $timeModel->listar(['id_save' => $id_save]);
-$time_selecionado = null;
-$tatica = null;
+// Get user's team with one query
+$user = $db->prepare("SELECT u.*, t.nome as time_nome 
+                      FROM users u 
+                      LEFT JOIN times t ON u.clube_id = t.id 
+                      WHERE u.id = ?")
+             ->execute([$user_id])
+             ->fetch(PDO::FETCH_ASSOC);
 
-if (isset($_GET['time_id'])) {
-    $time_selecionado = $timeModel->buscarPorId($_GET['time_id']);
-    if ($time_selecionado) {
-        $tatica = $taticaModel->buscarPorTime($time_selecionado['id'], $id_save);
+if (!$user || !$user['clube_id']) {
+    header("Location: escolher_time.php");
+    exit;
+}
+
+$clube_id = $user['clube_id'];
+$id_save = $user['id_save'] ?? 1;
+
+// Get players by position - single query
+$stmt = $db->prepare("SELECT * FROM jogadores WHERE time_id = ? AND id_save = ? ORDER BY 
+                      CASE posicao 
+                        WHEN 'Goleiro' THEN 1
+                        WHEN 'Defensor' THEN 2
+                        WHEN 'Meio-campista' THEN 3
+                        WHEN 'Atacante' THEN 4
+                      END, overall DESC");
+$stmt->execute([$clube_id, $id_save]);
+$jogadores = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Group by position
+$jogadores_por_posicao = [
+    'Goleiro' => [],
+    'Defensor' => [],
+    'Meio-campista' => [],
+    'Atacante' => []
+];
+
+foreach ($jogadores as $j) {
+    if (isset($jogadores_por_posicao[$j['posicao']])) {
+        $jogadores_por_posicao[$j['posicao']][] = $j;
     }
 }
 
-$mensagem = '';
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao'])) {
-    if ($_POST['acao'] === 'salvar' && isset($_POST['time_id'])) {
-        $taticaModel->atualizar($tatica['id'], [
-            'formacao' => $_POST['formacao'],
-            'estilo' => $_POST['estilo'],
-            'marcacao' => $_POST['marcacao'],
-            'controle' => $_POST['controle'],
-            'ataque' => $_POST['ataque'],
-            'laterais' => $_POST['laterais']
-        ]);
-        $mensagem = 'Tática salva com sucesso!';
-        $tatica = $taticaModel->buscarPorTime($_POST['time_id'], $id_save);
-    }
+// Handle formation change
+if (isset($_POST['formacao'])) {
+    $formacao = $_POST['formacao'];
+    $db->prepare("UPDATE saves SET formacao = ? WHERE user_id = ? AND ativo = 1")
+       ->execute([$formacao, $user_id]);
+    header("Location: tatica.php");
+    exit;
 }
+
+// Get current formation
+$formacao_atual = $db->prepare("SELECT formacao FROM saves WHERE user_id = ? AND ativo = 1")
+                        ->execute([$user_id])
+                        ->fetch(PDO::FETCH_ASSOC)['formacao'] ?? '4-4-2';
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Tática - Fenix Foot</title>
+    <title>Tática - Fenix Foot 2026</title>
     <style>
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family:Arial,sans-serif; background:#f0f0f0; }
-        .header { background:#2c3e50; color:white; padding:20px; text-align:center; }
-        .container { max-width:1000px; margin:20px auto; padding:0 20px; }
-        .btn { background:#3498db; color:white; padding:10px 20px; text-decoration:none; border:none; border-radius:5px; cursor:pointer; display:inline-block; margin:5px; }
-        .form-container { background:white; padding:20px; border-radius:10px; margin:20px 0; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
-        .form-group { margin:15px 0; }
-        .form-group label { display:block; margin-bottom:5px; font-weight:bold; }
-        .form-group select, .form-group input { width:100%; padding:8px; border:1px solid #ddd; border-radius:5px; }
-        .tatica-visual { background:#2c3e50; color:white; padding:20px; border-radius:10px; margin:20px 0; text-align:center; }
-        .field { display:flex; flex-direction:column; gap:10px; }
-        .line { display:flex; justify-content:center; gap:10px; }
-        .player { background:#3498db; padding:5px 10px; border-radius:5px; font-size:0.9em; }
-        .success { background:#2ecc71; color:white; padding:10px; border-radius:5px; margin:10px 0; }
-    <script src="js/audio.js"></script>
+        * { margin:0; padding:0; box-sizing:border-box; font-family: Arial, sans-serif; }
+        body { background: #050505; color: white; min-height:100vh; padding:20px; }
+        .container { max-width:1400px; margin:0 auto; }
+        h1 { color: #00d2ff; margin-bottom:20px; }
+        .btn { background: #00d2ff; color: black; padding:10px 20px; border:none; border-radius:10px; cursor:pointer; font-weight:700; }
+        .card { background: rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:20px; padding:20px; margin-bottom:20px; }
+        .formation-selector { margin-bottom:20px; }
+        .formation-selector select { background: rgba(255,255,255,0.1); color:white; padding:10px; border:1px solid rgba(255,255,255,0.2); border-radius:8px; font-size:1em; }
+        .field { background: rgba(0,100,0,0.3); border:2px solid rgba(255,255,255,0.2); border-radius:10px; padding:40px 20px; margin:20px 0; min-height:600px; }
+        .player-row { display:flex; justify-content:center; gap:20px; margin:30px 0; }
+        .player { background: rgba(255,255,255,0.1); border:2px solid #00d2ff; border-radius:10px; padding:10px 15px; text-align:center; min-width:120px; }
+        .player-name { font-weight:600; font-size:0.9em; }
+        .player-rating { font-size:0.8em; color:#00d2ff; }
+        .player-list { display:grid; grid-template-columns:repeat(auto-fill, minmax(150px,1fr)); gap:10px; margin-top:20px; }
+        .player-card { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:10px; }
+    </style>
 </head>
 <body>
-    <div class="header">
-        <h1>📋 Tática</h1>
-        <a href="index.php" class="btn">Voltar</a>
-    </div>
-    
     <div class="container">
-        <?php if ($mensagem): ?>
-            <div class="success"><?php echo htmlspecialchars($mensagem); ?></div>
-        <?php endif; ?>
+        <h1>TÁTICA - <?php echo htmlspecialchars($user['time_nome'] ?? 'Time'); ?></h1>
         
-        <div class="form-container">
-            <h3>Selecionar Time</h3>
-            <form method="GET">
-                <div class="form-group">
-                    <label>Time:</label>
-                    <select name="time_id" onchange="this.form.submit()">
-                        <option value="">-- Selecionar --</option>
-                        <?php foreach ($times as $t): ?>
-                            <option value="<?php echo $t['id']; ?>" <?php echo (isset($_GET['time_id']) && $_GET['time_id'] == $t['id']) ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($t['nome']); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
+        <div class="card">
+            <form method="POST" class="formation-selector">
+                <label style="color:#00d2ff; margin-right:10px;">Formação:</label>
+                <select name="formacao" onchange="this.form.submit()">
+                    <option value="4-4-2" <?php echo $formacao_atual == '4-4-2' ? 'selected' : ''; ?>>4-4-2</option>
+                    <option value="4-3-3" <?php echo $formacao_atual == '4-3-3' ? 'selected' : ''; ?>>4-3-3</option>
+                    <option value="3-5-2" <?php echo $formacao_atual == '3-5-2' ? 'selected' : ''; ?>>3-5-2</option>
+                    <option value="4-5-1" <?php echo $formacao_atual == '4-5-1' ? 'selected' : ''; ?>>4-5-1</option>
+                    <option value="5-3-2" <?php echo $formacao_atual == '5-3-2' ? 'selected' : ''; ?>>5-3-2</option>
+                </select>
             </form>
         </div>
         
-        <?php if ($time_selecionado && $tatica): ?>
-            <div class="tatica-visual">
-                <h3><?php echo htmlspecialchars($time_selecionado['nome']); ?> - <?php echo $tatica['formacao']; ?></h3>
-                <div class="field">
-                    <?php
-                    $formacao = $tatica['formacao'];
-                    if ($formacao === '4-4-2') {
-                        echo '<div class="line"><div class="player">GOL</div></div>';
-                        echo '<div class="line"><div class="player">LAT</div><div class="player">ZAG</div><div class="player">ZAG</div><div class="player">LAT</div></div>';
-                        echo '<div class="line"><div class="player">MEI</div><div class="player">MEI</div><div class="player">MEI</div><div class="player">MEI</div></div>';
-                        echo '<div class="line"><div class="player">ATA</div><div class="player">ATA</div></div>';
-                    }
-                    ?>
-                </div>
+        <div class="card">
+            <h3 style="color:#00d2ff; margin-bottom:20px;">Campo</h3>
+            <div class="field">
+                <?php 
+                $lines = [
+                    'Goleiro' => ['qtd'=>1, 'label'=>'Goleiro'],
+                    'Defensor' => ['qtd'=>4, 'label'=>'Defensores'],
+                    'Meio-campista' => ['qtd'=>4, 'label'=>'Meias'],
+                    'Atacante' => ['qtd'=>2, 'label'=>'Atacantes']
+                ];
+                foreach($lines as $pos => $cfg): ?>
+                    <div class="player-row">
+                        <?php 
+                        $players = array_slice($jogadores_por_posicao[$pos], 0, $cfg['qtd']);
+                        foreach($players as $j): ?>
+                            <div class="player">
+                                <div class="player-name"><?php echo htmlspecialchars($j['nome']); ?></div>
+                                <div class="player-rating"><?php echo $j['overall']; ?></div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endforeach; ?>
             </div>
-            
-            <div class="form-container">
-                <form method="POST">
-                    <input type="hidden" name="acao" value="salvar">
-                    <input type="hidden" name="time_id" value="<?php echo $time_selecionado['id']; ?>">
-                    
-                    <div class="form-group">
-                        <label>Formação:</label>
-                        <select name="formacao">
-                            <?php foreach ($taticaModel->listarFormacoes() as $key => $value): ?>
-                                <option value="<?php echo $key; ?>" <?php echo $tatica['formacao'] == $key ? 'selected' : ''; ?>>
-                                    <?php echo $value; ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
+        </div>
+        
+        <div class="card">
+            <h3 style="color:#00d2ff;">Todos os Jogadores (<?php echo count($jogadores); ?>)</h3>
+            <div class="player-list">
+                <?php foreach($jogadores as $j): ?>
+                    <div class="player-card">
+                        <div style="font-weight:600;"><?php echo htmlspecialchars($j['nome']); ?></div>
+                        <div style="font-size:0.8em; color:rgba(255,255,255,0.7);"><?php echo $j['posicao']; ?> - Overall: <?php echo $j['overall']; ?></div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label>Estilo:</label>
-                        <select name="estilo">
-                            <?php foreach ($taticaModel->listarEstilos() as $key => $value): ?>
-                                <option value="<?php echo $key; ?>" <?php echo $tatica['estilo'] == $key ? 'selected' : ''; ?>>
-                                    <?php echo $value; ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Marcação: <?php echo $tatica['marcacao']; ?></label>
-                        <input type="range" name="marcacao" min="0" max="100" value="<?php echo $tatica['marcacao']; ?>">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Controle: <?php echo $tatica['controle']; ?></label>
-                        <input type="range" name="controle" min="0" max="100" value="<?php echo $tatica['controle']; ?>">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Ataque: <?php echo $tatica['ataque']; ?></label>
-                        <input type="range" name="ataque" min="0" max="100" value="<?php echo $tatica['ataque']; ?>">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Laterais: <?php echo $tatica['laterais']; ?></label>
-                        <input type="range" name="laterais" min="0" max="100" value="<?php echo $tatica['laterais']; ?>">
-                    </div>
-                    
-                    <button type="submit" class="btn">Salvar Tática</button>
-                </form>
+                <?php endforeach; ?>
             </div>
-        <?php endif; ?>
+        </div>
+        
+        <a href="index.php" class="btn">Voltar</a>
     </div>
 </body>
 </html>

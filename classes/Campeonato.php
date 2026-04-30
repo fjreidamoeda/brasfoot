@@ -45,8 +45,8 @@ class Campeonato {
         $params = [':id' => $id];
         
         foreach ($dados as $campo => $valor) {
-            $campos[] = "{$campo} = :{$campo}";
-            $params[":{$campo}"] = $valor;
+            $campos[] = "{$campo} = :{$campo},";
+            $params[":{$campo},"] = $valor;
         }
         
         $sql = "UPDATE campeonatos SET " . implode(', ', $campos) . " WHERE id = :id";
@@ -54,20 +54,14 @@ class Campeonato {
         return $stmt->execute($params);
     }
     
-    public function gerarClassificacao($campeonato_id, $id_save = 1) {
+    public function listarClassificacao($campeonato_id, $id_save = 1) {
         $sql = "SELECT t.id, t.nome, 
-                COALESCE(SUM(CASE WHEN c.campeonato_id = :campeonato_id THEN c.pontos ELSE 0 END), 0) as pontos,
-                COALESCE(SUM(CASE WHEN c.campeonato_id = :campeonato_id THEN c.jogos ELSE 0 END), 0) as jogos,
-                COALESCE(SUM(CASE WHEN c.campeonato_id = :campeonato_id THEN c.vitorias ELSE 0 END), 0) as vitorias,
-                COALESCE(SUM(CASE WHEN c.campeonato_id = :campeonato_id THEN c.empates ELSE 0 END), 0) as empates,
-                COALESCE(SUM(CASE WHEN c.campeonato_id = :campeonato_id THEN c.derrotas ELSE 0 END), 0) as derrotas,
-                COALESCE(SUM(CASE WHEN c.campeonato_id = :campeonato_id THEN c.gols_pro ELSE 0 END), 0) as gols_pro,
-                COALESCE(SUM(CASE WHEN c.campeonato_id = :campeonato_id THEN c.gols_contra ELSE 0 END), 0) as gols_contra
-                FROM times t
-                LEFT JOIN classificacao c ON t.id = c.time_id
-                WHERE t.id_save = :id_save
-                GROUP BY t.id, t.nome
-                ORDER BY pontos DESC, (gols_pro - gols_contra) DESC, gols_pro DESC";
+                c.pontos, c.jogos, c.vitorias, c.empates, c.derrotas, 
+                c.gols_pro, c.gols_contra, (c.gols_pro - c.gols_contra) as saldo_gols
+                FROM classificacao c
+                JOIN times t ON c.time_id = t.id AND t.id_save = c.id_save
+                WHERE c.campeonato_id = :campeonato_id AND c.id_save = :id_save
+                ORDER BY c.pontos DESC, (c.gols_pro - c.gols_contra) DESC, c.gols_pro DESC";
         
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':campeonato_id' => $campeonato_id, ':id_save' => $id_save]);

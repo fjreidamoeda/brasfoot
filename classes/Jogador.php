@@ -11,10 +11,10 @@ class Jogador {
     
     public function criar($dados) {
         $sql = "INSERT INTO jogadores (nome, apelido, data_nascimento, nacionalidade, posicao, posicao_secundaria, pe_preferido, 
-                overall, potencial, velocidade, finalizacao, passe, defesa, fisico, goleiro, valor_mercado, salario, 
+                overall, potencial, velocidade, finalizacao, passe, defesa, fisico, resistencia, goleiro, titular, valor_mercado, salario, 
                 contrato_ate, clube_id, felicidade, forma, id_save) 
                 VALUES (:nome, :apelido, :data_nascimento, :nacionalidade, :posicao, :posicao_secundaria, :pe_preferido,
-                :overall, :potencial, :velocidade, :finalizacao, :passe, :defesa, :fisico, :goleiro, :valor_mercado, :salario,
+                :overall, :potencial, :velocidade, :finalizacao, :passe, :defesa, :fisico, :resistencia, :goleiro, :titular, :valor_mercado, :salario,
                 :contrato_ate, :clube_id, :felicidade, :forma, :id_save)";
         
         $stmt = $this->db->prepare($sql);
@@ -33,7 +33,9 @@ class Jogador {
             ':passe' => $dados['passe'] ?? 60,
             ':defesa' => $dados['defesa'] ?? 60,
             ':fisico' => $dados['fisico'] ?? 60,
+            ':resistencia' => $dados['resistencia'] ?? 60,
             ':goleiro' => $dados['goleiro'] ?? 60,
+            ':titular' => $dados['titular'] ?? 0,
             ':valor_mercado' => $dados['valor_mercado'] ?? 100000.00,
             ':salario' => $dados['salario'] ?? 5000.00,
             ':contrato_ate' => $dados['contrato_ate'] ?? null,
@@ -71,8 +73,8 @@ class Jogador {
         $params = [':id' => $id];
         
         foreach ($dados as $campo => $valor) {
-            $campos[] = "{$campo} = :{$campo}";
-            $params[":{$campo}"] = $valor;
+            $campos[] = "{$campo} = :{$campo},";
+            $params[":{$campo},"] = $valor;
         }
         
         $sql = "UPDATE jogadores SET " . implode(', ', $campos) . " WHERE id = :id";

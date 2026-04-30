@@ -1,0 +1,98 @@
+[
+    {
+        "nome": "Brasileirão Série A 2026",
+        "tipo": "Liga",
+        "pais": "Brasil",
+        "data_file": "liga_brasil_a"
+    },
+    {
+        "nome": "Brasileirão Série B 2026",
+        "tipo": "Liga",
+        "pais": "Brasil",
+        "data_file": "liga_brasil_b"
+    },
+    {
+        "nome": "Brasileirão Série C 2026",
+        "tipo": "Liga",
+        "pais": "Brasil",
+        "data_file": "liga_brasil_c"
+    },
+    {
+        "nome": "Premier League 2026/27",
+        "tipo": "Liga",
+        "pais": "Inglaterra",
+        "data_file": "liga_premier"
+    },
+    {
+        "nome": "La Liga 2026/27",
+        "tipo": "Liga",
+        "pais": "Espanha",
+        "data_file": "liga_laliga"
+    },
+    {
+        "nome": "Serie A 2026/27",
+        "tipo": "Liga",
+        "pais": "Itália",
+        "data_file": "liga_seriea"
+    },
+    {
+        "nome": "Bundesliga 2026/27",
+        "tipo": "Liga",
+        "pais": "Alemanha",
+        "data_file": "liga_bundesliga"
+    },
+    {
+        "nome": "Ligue 1 2026/27",
+        "tipo": "Liga",
+        "pais": "França",
+        "data_file": "liga_franca"
+    },
+    {
+        "nome": "Paulistão 2026",
+        "tipo": "Estadual",
+        "pais": "Brasil",
+        "data_file": "paulistao"
+    },
+    {
+        "nome": "Cariocão 2026",
+        "tipo": "Estadual",
+        "pais": "Brasil",
+        "data_file": "cariocao"
+    },
+    {
+        "nome": "Copa do Brasil 2026",
+        "tipo": "Copa",
+        "pais": "Brasil",
+        "data_file": "copa_brasil"
+    },
+    {
+        "nome": "Libertadores 2026",
+        "tipo": "Copa",
+        "pais": "América",
+        "data_file": "libertadores"
+    },
+    {
+        "nome": "Champions League 2026",
+        "tipo": "Copa",
+        "pais": "Europa",
+        "data_file": "champions"
+    },
+    {
+        "nome": "Europa League 2026",
+        "tipo": "Copa",
+        "pais": "Europa",
+        "data_file": "europa_league"
+    },
+    {
+        "nome": "Eurocopa 2026",
+        "tipo": "Copa",
+        "pais": "Europa",
+        "data_file": "eurocopa"
+    },
+    {
+        "nome": "Copa do Mundo 2026",
+        "tipo": "Copa",
+        "pais": "Mundo",
+        "data_file": "mundial"
+    }
+]

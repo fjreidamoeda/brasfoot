@@ -13,6 +13,8 @@ CREATE TABLE IF NOT EXISTS times (
     divisao INTEGER DEFAULT 1,
     reputacao INTEGER DEFAULT 50,
     orcamento DECIMAL(15,2) DEFAULT 1000000.00,
+    estadio VARCHAR(100),
+    estadio_foto VARCHAR(255),
     id_save INTEGER DEFAULT 1,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -35,10 +37,13 @@ CREATE TABLE IF NOT EXISTS jogadores (
     passe INTEGER DEFAULT 60,
     defesa INTEGER DEFAULT 60,
     fisico INTEGER DEFAULT 60,
+    resistencia INTEGER DEFAULT 60,
     goleiro INTEGER DEFAULT 60,
+    titular INTEGER DEFAULT 0,
     valor_mercado DECIMAL(15,2) DEFAULT 100000.00,
     salario DECIMAL(10,2) DEFAULT 5000.00,
     contrato_ate DATE,
+    idade INTEGER DEFAULT 20,
     clube_id INTEGER,
     felicidade INTEGER DEFAULT 70,
     forma INTEGER DEFAULT 80,
@@ -267,6 +272,9 @@ CREATE TABLE IF NOT EXISTS configuracoes (
 CREATE TABLE IF NOT EXISTS saves (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nome VARCHAR(100) NOT NULL,
+    nome_tecnico VARCHAR(100),
+    nacionalidade VARCHAR(50) DEFAULT 'Brasil',
+    clube_id INTEGER,
     data_inicio DATE DEFAULT CURRENT_DATE,
     temporada_atual VARCHAR(10) DEFAULT '2026',
     dia_atual INTEGER DEFAULT 1,
@@ -287,3 +295,28 @@ CREATE INDEX IF NOT EXISTS idx_financas_time ON financas(time_id);
 CREATE INDEX IF NOT EXISTS idx_estatisticas_jogador ON estatisticas_jogador(jogador_id);
 CREATE INDEX IF NOT EXISTS idx_times_save ON times(id_save);
 CREATE INDEX IF NOT EXISTS idx_campeonatos_save ON campeonatos(id_save);
+
+-- Usuarios (Users)
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    clube_id INTEGER,
+    id_save INTEGER,
+    moedas INTEGER DEFAULT 500,
+    ranking_pontos INTEGER DEFAULT 0,
+    nacionalidade VARCHAR(50) DEFAULT 'Brasil',
+    last_activity TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Desafios (Challenges)
+CREATE TABLE IF NOT EXISTS desafios (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    desafiante_id INTEGER,
+    desafiado_id INTEGER,
+    status VARCHAR(20) DEFAULT 'pendente',
+    partida_id INTEGER,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (desafiante_id) REFERENCES users(id),
+    FOREIGN KEY (desafiado_id) REFERENCES users(id)
+);

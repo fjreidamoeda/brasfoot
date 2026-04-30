@@ -1,0 +1,66 @@
+[
+    {
+        "nome": "Real Madrid",
+        "sigla": "RMA",
+        "cidade": "Madrid",
+        "pais": "Espanha",
+        "rep": 98,
+        "orca": 200000000
+    },
+    {
+        "nome": "Manchester City",
+        "sigla": "MCI",
+        "cidade": "Manchester",
+        "pais": "Inglaterra",
+        "rep": 97,
+        "orca": 150000000
+    },
+    {
+        "nome": "Bayern de Munique",
+        "sigla": "BAY",
+        "cidade": "Munique",
+        "pais": "Alemanha",
+        "rep": 97,
+        "orca": 180000000
+    },
+    {
+        "nome": "Paris Saint-Germain",
+        "sigla": "PSG",
+        "cidade": "Paris",
+        "pais": "França",
+        "rep": 96,
+        "orca": 200000000
+    },
+    {
+        "nome": "Inter de Milão",
+        "sigla": "INT",
+        "cidade": "Milão",
+        "pais": "Itália",
+        "rep": 96,
+        "orca": 100000000
+    },
+    {
+        "nome": "Liverpool",
+        "sigla": "LIV",
+        "cidade": "Liverpool",
+        "pais": "Inglaterra",
+        "rep": 94,
+        "orca": 90000000
+    },
+    {
+        "nome": "Bayer Leverkusen",
+        "sigla": "LEV",
+        "cidade": "Leverkusen",
+        "pais": "Alemanha",
+        "rep": 94,
+        "orca": 90000000
+    },
+    {
+        "nome": "Borussia Dortmund",
+        "sigla": "DOR",
+        "cidade": "Dortmund",
+        "pais": "Alemanha",
+        "rep": 93,
+        "orca": 85000000
+    }
+]

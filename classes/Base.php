@@ -70,7 +70,7 @@ class Base {
         
         $jogador = new Jogador();
         return $jogador->criar([
-            'nome' => $nomes[array_rand($nomes)] . ' ' . $sobrenomes[array_rand($sobrenomes)],
+            'nome' => $nomes[array_rand($nomes)] . ', ' . $sobrenomes[array_rand($sobrenomes)],
             'posicao' => $posicao,
             'overall' => mt_rand(55, 65),
             'potencial' => mt_rand(75, 90),

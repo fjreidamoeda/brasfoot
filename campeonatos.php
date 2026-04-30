@@ -1,70 +1,52 @@
 <?php
-require_once 'classes/Campeonato.php';
-require_once 'classes/Save.php';
-require_once 'classes/Partida.php';
+require_once 'autoload.php';
+session_start();
 
-$save = new Save();
-$save_ativo = $save->buscarAtivo();
-$id_save = $save_ativo['id'] ?? 1;
+if (!isset($_SESSION['user_id'])) { header("Location: login.php"); exit; }
 
-$campeonatoModel = new Campeonato();
-$partidaModel = new Partida();
+$db = Database::getInstance()->getConnection();
+$user_id = $_SESSION['user_id'];
 
-$campeonatos = $campeonatoModel->listar($id_save);
+// Get active save
+$save = $db->query("SELECT * FROM saves WHERE ativo = 1 LIMIT 1")->fetch(PDO::FETCH_ASSOC);
+$id_save = $save ? $save['id'] : 1;
+
+// Get user's club
+$user = $db->prepare("SELECT u.*, t.nome as time_nome FROM users u LEFT JOIN times t ON u.clube_id = t.id WHERE u.id = ?")->execute([$user_id])->fetch(PDO::FETCH_ASSOC);
+$clube_id = $user['clube_id'] ?? 0;
+
+// Get championships with classification - optimized query
+$stmt = $db->prepare("SELECT c.*, 
+    (SELECT COUNT(*) FROM classificacao cl WHERE cl.campeonato_id = c.id AND cl.id_save = c.id_save) as has_classificacao
+    FROM campeonatos c WHERE c.id_save = ? ORDER BY c.pais, c.nome");
+$stmt->execute([$id_save]);
+$campeonatos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Campeonatos - Fenix Foot</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <title>Campeonatos - Fenix Foot 2026</title>
     <style>
-        :root {
-            --glass: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --primary: #00d2ff;
-            --secondary: #3a7bd5;
-            --accent: #ff007a;
-            --text: #ffffff;
-        }
-        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Outfit', sans-serif; }
-        body { 
-            background: radial-gradient(circle at top right, #1e3c72, #2a5298, #0f2027); 
-            min-height: 100vh; 
-            color: var(--text);
-        }
-        .header { 
-            padding: 30px; 
-            text-align: center; 
-            background: rgba(0,0,0,0.4);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--glass-border);
-        }
-        .header h1 { font-size: 2.5em; font-weight: 800; letter-spacing: -1px; }
+        * { margin:0; padding:0; box-sizing:border-box; font-family: Arial, sans-serif; }
+        body { background: #050505; color: white; min-height:100vh; }
+        .header { padding:30px; text-align:center; background: rgba(0,0,0,0.4); border-bottom:1px solid rgba(255,255,255,0.1); }
+        .header h1 { color: #00d2ff; font-size:2.5em; margin:0; }
         .container { max-width:1200px; margin:20px auto; padding:0 20px; }
-        .btn { background: var(--glass); border: 1px solid var(--glass-border); color:white; padding:10px 20px; text-decoration:none; border-radius:12px; cursor:pointer; display:inline-block; margin:5px; transition: all 0.3s; backdrop-filter: blur(5px); }
-        .btn:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); border-color: var(--primary); }
+        .btn { background: rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:white; padding:10px 20px; text-decoration:none; border-radius:12px; cursor:pointer; display:inline-block; margin:5px; }
+        .btn:hover { background: rgba(255,255,255,0.2); }
         
-        .champ-card { 
-            background: var(--glass); 
-            backdrop-filter: blur(15px); 
-            padding:30px; 
-            border-radius:30px; 
-            margin:30px 0; 
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-        }
-        .champ-card h3 { color: var(--primary); font-size: 1.8em; margin-bottom:15px; font-weight: 800; }
+        .champ-card { background: rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:20px; padding:30px; margin:20px 0; }
+        .champ-card h3 { color: #00d2ff; font-size:1.8em; margin:0 0 10px 0; }
+        .champ-info { color: rgba(255,255,255,0.7); margin-bottom:15px; }
         
-        table { width:100%; border-collapse:collapse; margin-top:20px; background: rgba(0,0,0,0.2); border-radius: 20px; overflow: hidden; }
-        th, td { padding:15px; text-align:left; border-bottom:1px solid var(--glass-border); }
-        th { background: rgba(255,255,255,0.05); color: var(--primary); font-weight: 600; text-transform: uppercase; font-size: 0.8em; letter-spacing: 1px; }
-        tr:hover { background: rgba(255,255,255,0.05); }
+        table { width:100%; border-collapse:collapse; margin-top:20px; }
+        th, td { padding:12px 15px; text-align:left; border-bottom:1px solid rgba(255,255,255,0.1); }
+        th { background: rgba(255,255,255,0.05); color: #00d2ff; font-weight:600; text-transform:uppercase; font-size:0.8em; letter-spacing:1px; }
+        tr:hover { background: rgba(255,255,255,0.02); }
         .pos { font-weight:800; width:40px; color: rgba(255,255,255,0.5); }
-        tr:nth-child(-n+4) .pos { color: #2ecc71; } /* G4 */
-        tr:nth-child(n+17) .pos { color: #ff007a; } /* Z4 */
-        .points { font-weight: 800; color: white; }
+        .my-league { border-color: #00d2ff; }
+        .tag { background: #00d2ff; color:black; padding:5px 12px; border-radius:10px; font-size:0.7em; font-weight:800; }
     </style>
 </head>
 <body>
@@ -74,58 +56,84 @@ $campeonatos = $campeonatoModel->listar($id_save);
     </div>
     
     <div class="container">
-        <?php foreach ($campeonatos as $camp): ?>
-            <div class="champ-card">
-                <h3><?php echo htmlspecialchars($camp['nome']); ?></h3>
-                <p><strong>Tipo:</strong> <?php echo $camp['tipo']; ?> | 
-                   <strong>País:</strong> <?php echo $camp['pais']; ?> | 
-                   <strong>Temporada:</strong> <?php echo $camp['temporada']; ?></p>
-                
-                <div class="standings">
-                    <h4>Classificação</h4>
-                    <?php $classificacao = $campeonatoModel->gerarClassificacao($camp['id'], $id_save); ?>
-                    
-                    <?php if (empty($classificacao) || $classificacao[0]['pontos'] == 0): ?>
-                        <p style="padding:10px; background:#ecf0f1; border-radius:5px;">
-                            Nenhuma partida jogada ainda. <a href="calendario.php">Ir para o calendário</a>.
-                        </p>
-                    <?php else: ?>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Pos</th>
-                                    <th>Time</th>
-                                    <th>P</th>
-                                    <th>J</th>
-                                    <th>V</th>
-                                    <th>E</th>
-                                    <th>D</th>
-                                    <th>GP</th>
-                                    <th>GC</th>
-                                    <th>SG</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php $pos = 1; foreach ($classificacao as $c): ?>
-                                    <tr>
-                                        <td class="pos"><?php echo $pos++; ?></td>
-                                        <td><?php echo htmlspecialchars($c['nome']); ?></td>
-                                        <td><strong><?php echo $c['pontos']; ?></strong></td>
-                                        <td><?php echo $c['jogos']; ?></td>
-                                        <td><?php echo $c['vitorias']; ?></td>
-                                        <td><?php echo $c['empates']; ?></td>
-                                        <td><?php echo $c['derrotas']; ?></td>
-                                        <td><?php echo $c['gols_pro']; ?></td>
-                                        <td><?php echo $c['gols_contra']; ?></td>
-                                        <td><?php echo $c['gols_pro'] - $c['gols_contra']; ?></td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
+        <?php foreach ($campeonatos as $camp): 
+            // Check if it's user's league
+            $is_my_league = false;
+            if ($clube_id > 0) {
+                $stmt = $db->prepare("SELECT 1 FROM classificacao WHERE campeonato_id = ? AND time_id = ? AND id_save = ?");
+                $stmt->execute([$camp['id'], $clube_id, $id_save]);
+                $is_my_league = (bool)$stmt->fetch();
+            }
+        ?>
+            <div class="champ-card <?php echo $is_my_league ? 'my-league' : ''; ?>">
+                <div style="display:flex; justify-content:space-between; align-items:start;">
+                    <div>
+                        <h3><?php echo htmlspecialchars($camp['nome']); ?></h3>
+                        <div class="champ-info">
+                            <strong><?php echo $camp['pais']; ?></strong> | <?php echo $camp['tipo']; ?> | <?php echo $camp['temporada']; ?>
+                        </div>
+                    </div>
+                    <?php if ($is_my_league): ?>
+                        <span class="tag">Minha Liga ⭐</span>
                     <?php endif; ?>
+                    <a href="calendario.php?id_camp=<?php echo $camp['id']; ?>" class="btn">VER CALENDÁRIO 📅</a>
+                </div>
+                
+                <?php if ($camp['has_classificacao'] > 0): ?>
+                <div style="margin-top:20px;">
+                    <h4 style="font-size:0.9em; text-transform:uppercase; color:rgba(255,255,255,0.4); letter-spacing:1px;">Classificação Parcial</h4>
+                    <?php 
+                    $stmt = $db->prepare("SELECT cl.*, t.nome as time_nome FROM classificacao cl JOIN times t ON cl.time_id = t.id WHERE cl.campeonato_id = ? AND cl.id_save = ? ORDER BY cl.pontos DESC, (cl.gols_pro - cl.gols_contra) DESC LIMIT 10");
+                    $stmt->execute([$camp['id'], $id_save]);
+                    $classificacao = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    ?>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Pos</th>
+                                <th>Time</th>
+                                <th>P</th>
+                                <th>J</th>
+                                <th>V</th>
+                                <th>E</th>
+                                <th>D</th>
+                                <th>GP</th>
+                                <th>GC</th>
+                                <th>SG</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php $pos = 1; foreach ($classificacao as $c): ?>
+                                <tr>
+                                    <td class="pos"><?php echo $pos++; ?></td>
+                                    <td><?php echo htmlspecialchars($c['time_nome']); ?></td>
+                                    <td><strong><?php echo $c['pontos']; ?></strong></td>
+                                    <td><?php echo $c['jogos']; ?></td>
+                                    <td><?php echo $c['vitorias']; ?></td>
+                                    <td><?php echo $c['empates']; ?></td>
+                                    <td><?php echo $c['derrotas']; ?></td>
+                                    <td><?php echo $c['gols_pro']; ?></td>
+                                    <td><?php echo $c['gols_contra']; ?></td>
+                                    <td><?php echo $c['gols_pro'] - $c['gols_contra']; ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                <?php else: ?>
+                    <div style="padding:20px; text-align:center; color:rgba(255,255,255,0.5);">
+                        Nenhuma partida jogada ainda. <a href="calendario.php?id_camp=<?php echo $camp['id']; ?>" style="color:#00d2ff;">Ir para o calendário</a>.
+                    </div>
+                <?php endif; ?>
                 </div>
             </div>
         <?php endforeach; ?>
+        
+        <?php if (empty($campeonatos)): ?>
+            <div style="text-align:center; padding:40px; color:rgba(255,255,255,0.5);">
+                <h3 style="color:#00d2ff;">Nenhum campeonato encontrado</h3>
+                <p>Crie campeonatos primeiro no setup ou aguarde a geração automática.</p>
+            </div>
+        <?php endif; ?>
     </div>
 </body>
 </html>

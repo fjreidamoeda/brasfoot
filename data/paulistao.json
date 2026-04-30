@@ -1,0 +1,130 @@
+[
+    {
+        "nome": "Palmeiras",
+        "sigla": "PAL",
+        "cidade": "São Paulo",
+        "pais": "Brasil",
+        "rep": 94,
+        "orca": 45000000
+    },
+    {
+        "nome": "São Paulo",
+        "sigla": "SPFC",
+        "cidade": "São Paulo",
+        "pais": "Brasil",
+        "rep": 90,
+        "orca": 35000000
+    },
+    {
+        "nome": "Corinthians",
+        "sigla": "COR",
+        "cidade": "São Paulo",
+        "pais": "Brasil",
+        "rep": 85,
+        "orca": 22000000
+    },
+    {
+        "nome": "Santos",
+        "sigla": "SAN",
+        "cidade": "Santos",
+        "pais": "Brasil",
+        "rep": 88,
+        "orca": 30000000
+    },
+    {
+        "nome": "Red Bull Bragantino",
+        "sigla": "RBB",
+        "cidade": "Bragança Paulista",
+        "pais": "Brasil",
+        "rep": 84,
+        "orca": 25000000
+    },
+    {
+        "nome": "Novorizontino",
+        "sigla": "NOV",
+        "cidade": "Novo Horizonte",
+        "pais": "Brasil",
+        "rep": 76,
+        "orca": 4000000
+    },
+    {
+        "nome": "Inter de Limeira",
+        "sigla": "INT",
+        "cidade": "Limeira",
+        "pais": "Brasil",
+        "rep": 70,
+        "orca": 2000000
+    },
+    {
+        "nome": "Ponte Preta",
+        "sigla": "PON",
+        "cidade": "Campinas",
+        "pais": "Brasil",
+        "rep": 76,
+        "orca": 5000000
+    },
+    {
+        "nome": "Mirassol",
+        "sigla": "MIR",
+        "cidade": "Mirassol",
+        "pais": "Brasil",
+        "rep": 76,
+        "orca": 4000000
+    },
+    {
+        "nome": "Água Santa",
+        "sigla": "AGU",
+        "cidade": "Diadema",
+        "pais": "Brasil",
+        "rep": 68,
+        "orca": 1500000
+    },
+    {
+        "nome": "São Bernardo",
+        "sigla": "SBE",
+        "cidade": "São Bernardo",
+        "pais": "Brasil",
+        "rep": 71,
+        "orca": 1500000
+    },
+    {
+        "nome": "Botafogo-SP",
+        "sigla": "BSP",
+        "cidade": "Ribeirão Preto",
+        "pais": "Brasil",
+        "rep": 74,
+        "orca": 3000000
+    },
+    {
+        "nome": "Guarani",
+        "sigla": "GUA",
+        "cidade": "Campinas",
+        "pais": "Brasil",
+        "rep": 75,
+        "orca": 4000000
+    },
+    {
+        "nome": "Ituano",
+        "sigla": "ITU",
+        "cidade": "Itu",
+        "pais": "Brasil",
+        "rep": 73,
+        "orca": 2000000
+    },
+    {
+        "nome": "Portuguesa",
+        "sigla": "POR",
+        "cidade": "São Paulo",
+        "pais": "Brasil",
+        "rep": 70,
+        "orca": 2000000
+    },
+    {
+        "nome": "Santo André",
+        "sigla": "STA",
+        "cidade": "Santo André",
+        "pais": "Brasil",
+        "rep": 67,
+        "orca": 1000000
+    }
+]

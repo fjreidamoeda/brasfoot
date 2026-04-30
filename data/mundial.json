@@ -1,0 +1,82 @@
+[
+    {
+        "nome": "Brasil",
+        "sigla": "BRA",
+        "cidade": "Brasília",
+        "pais": "Brasil",
+        "rep": 96,
+        "orca": 0
+    },
+    {
+        "nome": "Argentina",
+        "sigla": "ARG",
+        "cidade": "Buenos Aires",
+        "pais": "Argentina",
+        "rep": 95,
+        "orca": 0
+    },
+    {
+        "nome": "França",
+        "sigla": "FRA",
+        "cidade": "Paris",
+        "pais": "França",
+        "rep": 95,
+        "orca": 0
+    },
+    {
+        "nome": "Espanha",
+        "sigla": "ESP",
+        "cidade": "Madrid",
+        "pais": "Espanha",
+        "rep": 94,
+        "orca": 0
+    },
+    {
+        "nome": "Inglaterra",
+        "sigla": "ING",
+        "cidade": "Londres",
+        "pais": "Inglaterra",
+        "rep": 94,
+        "orca": 0
+    },
+    {
+        "nome": "Alemanha",
+        "sigla": "ALE",
+        "cidade": "Berlim",
+        "pais": "Alemanha",
+        "rep": 92,
+        "orca": 0
+    },
+    {
+        "nome": "Itália",
+        "sigla": "ITA",
+        "cidade": "Roma",
+        "pais": "Itália",
+        "rep": 91,
+        "orca": 0
+    },
+    {
+        "nome": "Portugal",
+        "sigla": "POR",
+        "cidade": "Lisboa",
+        "pais": "Portugal",
+        "rep": 91,
+        "orca": 0
+    },
+    {
+        "nome": "Holanda",
+        "sigla": "HOL",
+        "cidade": "Amsterdã",
+        "pais": "Holanda",
+        "rep": 90,
+        "orca": 0
+    },
+    {
+        "nome": "Uruguai",
+        "sigla": "URU",
+        "cidade": "Montevidéu",
+        "pais": "Uruguai",
+        "rep": 89,
+        "orca": 0
+    }
+]

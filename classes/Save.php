@@ -9,11 +9,15 @@ class Save {
         $this->db = $database->getConnection();
     }
     
-    public function criar($nome) {
-        $sql = "INSERT INTO saves (nome, data_inicio, temporada_atual, dia_atual, mes_atual, ativo) 
-                VALUES (:nome, DATE('now'), '2026', 1, 1, 1)";
+    public function criar($nome, $nome_tecnico = 'Técnico', $clube_id = null) {
+        $sql = "INSERT INTO saves (nome, nome_tecnico, clube_id, data_inicio, temporada_atual, dia_atual, mes_atual, ativo) 
+                VALUES (:nome, :nome_tecnico, :clube_id, DATE('now'), '2026', 1, 1, 1)";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([':nome' => $nome]);
+        $stmt->execute([
+            ':nome' => $nome,
+            ':nome_tecnico' => $nome_tecnico,
+            ':clube_id' => $clube_id
+        ]);
         return $this->db->lastInsertId();
     }
     
